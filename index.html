@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Nirmal Kumar — CSE (IoT) student and developer portfolio.">
+<title>Nirmal Kumar — Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        acid: '#ccff00',
+        pink: '#ff33cc',
+        black: '#111111',
+        paper: '#f2f2f4'
+      },
+      boxShadow: {
+        brutal: '6px 6px 0 #111',
+        brutalLg: '10px 10px 0 #111'
+      },
+      letterSpacing: {
+        tightest: '-0.08em'
+      }
+    }
+  }
+}
+</script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-serif;overflow-x:hidden}
+::selection{background:#111;color:#fff}
+::-webkit-scrollbar{width:12px}
+::-webkit-scrollbar-track{background:#111}
+::-webkit-scrollbar-thumb{background:#ccff00;border:3px solid #111}
+.grid-bg{background-image:linear-gradient(rgba(17,17,17,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(17,17,17,.12) 1px,transparent 1px);background-size:60px 60px}
+.grid-fine{background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:36px 36px}
+.stroke{-webkit-text-stroke:2px #333;color:transparent}
+.reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
+.reveal.show{opacity:1;transform:none}
+.nav-scrolled{background:#111!important;color:#fff!important;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.card{border:3px solid #111;box-shadow:6px 6px 0 #111}
+.hover-lift{transition:.2s ease}
+.hover-lift:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 #111}
+.marquee{animation:marquee 18s linear infinite;white-space:nowrap}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.float-a{animation:floatA 5s ease-in-out infinite}
+.float-b{animation:floatB 7s ease-in-out infinite}
+@keyframes floatA{0%,100%{transform:translateY(0) rotate(3deg)}50%{transform:translateY(-14px) rotate(-2deg)}}
+@keyframes floatB{0%,100%{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(10px,12px) rotate(4deg)}}
+.glitch:hover{animation:glitch .25s steps(2,end) 2}
+@keyframes glitch{0%{transform:translate(0)}50%{transform:translate(3px,-2px)}100%{transform:translate(-2px,2px)}}
+.shine{position:relative;overflow:hidden}.shine:after{content:"";position:absolute;inset:-100% -30%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-70%);transition:transform .7s}.shine:hover:after{transform:translateX(70%)}
+</style>
+</head>
+<body>
+
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-5 md:px-8 py-5 bg-transparent transition-all">
+  <a href="#home" class="font-black text-xl uppercase tracking-tighter">NIRMAL<span class="text-pink">.</span></a>
+  <div class="hidden md:flex gap-7 font-black text-sm uppercase">
+    <a href="#about" class="hover:underline">About</a>
+    <a href="#education" class="hover:underline">Education</a>
+    <a href="#stack" class="hover:underline">Stack</a>
+    <a href="#achievements" class="hover:underline">Achievements</a>
+    <a href="#work" class="hover:underline">Work</a>
+    <a href="#contact" class="hover:underline">Contact</a>
+  </div>
+  <button id="menuBtn" class="md:hidden font-black uppercase">Menu</button>
+</nav>
+
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-black text-acid translate-x-full transition-transform duration-300 flex items-center justify-center">
+  <div class="grid-fine absolute inset-0 opacity-30"></div>
+  <div class="relative flex flex-col gap-7 text-center">
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#about">About</a>
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#education">Education</a>
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#stack">Stack</a>
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#achievements">Achievements</a>
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#work">Work</a>
+    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#contact">Contact</a>
+  </div>
+</div>
+
+<main>
+<section id="home" class="min-h-screen pt-28 pb-16 px-5 md:px-10 grid-bg flex items-center relative overflow-hidden">
+  <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-12 gap-10 items-center">
+    <div class="lg:col-span-7 reveal">
+      <p class="font-black uppercase tracking-[.28em] text-sm mb-5">CSE • Developer • Student</p>
+      <h1 class="text-[17vw] lg:text-[9.5rem] leading-[.78] font-black uppercase tracking-tightest text-pink">
+        NIRMAL<br>KUMAR
+      </h1>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <span class="bg-black text-white px-5 py-3 font-black uppercase shadow-brutal">Building & learning</span>
+        <span class="font-black uppercase border-b-4 border-black pb-1">India</span>
+      </div>
+    </div>
+    <div class="lg:col-span-5 reveal">
+      <div class="card bg-white p-3 rotate-2 hover:rotate-0 transition-transform duration-300">
+        <div class="aspect-[4/5] bg-black overflow-hidden">
+          <img src="nkimage.jpg" alt="Nirmal Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
+        </div>
+        <div class="flex justify-between items-center px-2 pt-4 pb-1">
+          <span class="font-black uppercase">Nirmal Kumar</span>
+          <span class="font-mono text-xs uppercase">01 / 01</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute -bottom-10 right-4 text-[18vw] font-black opacity-[.06] select-none">BUILD</div>
+</section>
+
+<div class="bg-black text-acid border-y-4 border-black overflow-hidden py-4">
+  <div class="marquee inline-flex gap-12 font-black uppercase text-xl md:text-3xl">
+    <span>BUILD • LEARN • EXPERIMENT • REPEAT •</span>
+    <span>BUILD • LEARN • EXPERIMENT • REPEAT •</span>
+    <span>BUILD • LEARN • EXPERIMENT • REPEAT •</span>
+    <span>BUILD • LEARN • EXPERIMENT • REPEAT •</span>
+  </div>
+</div>
+
+<section id="about" class="bg-pink text-white py-24 px-5 md:px-10">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-start">
+    <div class="reveal">
+      <p class="text-xs font-black uppercase tracking-[.3em] text-black">01 — About</p>
+      <h2 class="text-6xl md:text-8xl font-black uppercase leading-[.8] tracking-tightest mt-5">
+        WHO<br>AM I<span class="text-black">?</span>
+      </h2>
+    </div>
+    <div class="reveal">
+      <p class="text-2xl md:text-3xl font-black leading-tight">
+        I'm Nirmal Kumar, a Computer Science & Engineering student, with a strong interest in software development and modern technology.
+      </p>
+      <p class="mt-7 text-base md:text-lg font-medium leading-relaxed max-w-xl">
+        I like understanding how things work, turning ideas into working interfaces and applications, and continuously improving my skills through hands-on building.
+      </p>
+      <div class="mt-10 grid grid-cols-2 gap-4 max-w-lg">
+        <div class="bg-white text-black border-3 border-black p-5 shadow-brutal">
+          <div class="text-4xl font-black">01</div>
+          <div class="font-black uppercase mt-2">Learn</div>
+        </div>
+        <div class="bg-acid text-black border-3 border-black p-5 shadow-brutal">
+          <div class="text-4xl font-black">02</div>
+          <div class="font-black uppercase mt-2">Build</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack" class="bg-black text-white py-28 px-5 md:px-10 grid-fine">
+  <div class="max-w-7xl mx-auto">
+    <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[.3em] text-acid">03 — Skills & Tools</p>
+        <h2 class="text-6xl md:text-9xl font-black uppercase leading-[.75] tracking-tightest mt-5 glitch">
+          MY<br><span class="text-pink">TOOLBOX</span>
+        </h2>
+      </div>
+      <p class="max-w-md text-gray-400 text-lg leading-relaxed">
+        Technologies I use, learn and experiment with while building software.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="reveal card bg-acid text-black p-7 hover-lift shine">
+        <div class="text-xs font-black uppercase tracking-widest">01 / Core</div>
+        <h3 class="text-3xl font-black uppercase mt-6">Programming</h3>
+        <div class="flex flex-wrap gap-2 mt-7">
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">C</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">C++</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Python</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="reveal card bg-white text-black p-7 hover-lift shine">
+        <div class="text-xs font-black uppercase tracking-widest">02 / Web</div>
+        <h3 class="text-3xl font-black uppercase mt-6">Web Development</h3>
+        <div class="flex flex-wrap gap-2 mt-7">
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">HTML</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">CSS</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">JavaScript</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">React</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Tailwind</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Node.js</span>
+        </div>
+      </div>
+
+      <div class="reveal card bg-pink text-black p-7 hover-lift shine">
+        <div class="text-xs font-black uppercase tracking-widest">03 / Development</div>
+        <h3 class="text-3xl font-black uppercase mt-6">Tools & Backend</h3>
+        <div class="flex flex-wrap gap-2 mt-7">
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Git</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">GitHub</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Firebase</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">Supabase</span>
+          <span class="bg-black text-white px-3 py-2 font-mono text-xs">SQL</span>
+        </div>
+      </div>
+
+      <div class="reveal card bg-white text-black p-7 hover-lift shine">
+        <div class="text-xs font-black uppercase tracking-widest">04 / Focus</div>
+        <h3 class="text-3xl font-black uppercase mt-6">IoT & AI</h3>
+        <div class="flex flex-wrap gap-2 mt-7">
+          <span class="bg-acid px-3 py-2 font-mono text-xs border border-black">IoT</span>
+          <span class="bg-acid px-3 py-2 font-mono text-xs border border-black">AI</span>
+          <span class="bg-acid px-3 py-2 font-mono text-xs border border-black">Automation</span>
+          <span class="bg-acid px-3 py-2 font-mono text-xs border border-black">APIs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 border-t-2 border-gray-800 pt-8 reveal">
+      <div class="flex flex-wrap gap-x-8 gap-y-4 font-mono text-xs uppercase text-gray-500">
+        <span>Frontend</span><span>Backend</span><span>Databases</span><span>Version Control</span><span>AI</span><span>IoT</span><span>Problem Solving</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="education" class="bg-white text-black py-24 px-5 md:px-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="reveal mb-14">
+      <p class="text-xs font-black uppercase tracking-[.3em]">04 — Education</p>
+      <h2 class="text-6xl md:text-9xl font-black uppercase leading-[.75] tracking-tightest mt-5">
+        MY<br><span class="text-pink">JOURNEY</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="reveal card bg-acid p-7 hover-lift float-a">
+        <div class="font-mono text-sm">CURRENT</div>
+        <h3 class="text-3xl font-black uppercase mt-10 leading-none">B.Tech<br>CSE (IoT)</h3>
+        <p class="font-bold uppercase mt-6">Government Engineering College, Siwan</p>
+        <p class="font-mono text-xs uppercase mt-2">Lateral Entry</p>
+      </div>
+
+      <div class="reveal card bg-pink p-7 hover-lift float-b">
+        <div class="font-mono text-sm">03 YEARS</div>
+        <h3 class="text-3xl font-black uppercase mt-10 leading-none">Diploma</h3>
+        <p class="font-bold uppercase mt-6">Ganga Memorial College of Polytechnic</p>
+        <p class="font-mono text-xs uppercase mt-2">3-Year Diploma</p>
+        <div class="mt-7 inline-flex items-center gap-2 bg-black text-acid px-4 py-2 font-black uppercase">
+          <span>CGPA</span><span class="text-2xl">9.0</span>
+        </div>
+      </div>
+
+      <div class="reveal card bg-black text-white p-7 hover-lift">
+        <div class="font-mono text-sm text-acid">FOUNDATION</div>
+        <h3 class="text-3xl font-black uppercase mt-10 leading-none">Class X</h3>
+        <p class="font-bold uppercase mt-6">M.S. Kurthoul</p>
+        <p class="font-mono text-xs uppercase mt-2 text-gray-400">School Education</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="achievements" class="bg-black text-white py-28 px-5 md:px-10 grid-fine">
+  <div class="max-w-7xl mx-auto">
+    <div class="reveal mb-16">
+      <p class="text-xs font-black uppercase tracking-[.3em] text-acid">05 — Achievements</p>
+      <h2 class="text-6xl md:text-9xl font-black uppercase leading-[.75] tracking-tightest mt-5">
+        EXPERIENCE<br><span class="text-pink">IN MOTION</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-7">
+      <article class="reveal card bg-acid text-black p-8 md:p-10 hover-lift shine">
+        <div class="flex justify-between items-start gap-4">
+          <span class="bg-black text-acid px-3 py-2 font-mono text-xs uppercase">Ongoing</span>
+          <span class="font-black text-3xl">01</span>
+        </div>
+        <p class="font-mono text-xs uppercase mt-12">Japan • Internship</p>
+        <h3 class="text-4xl md:text-5xl font-black uppercase leading-[.85] mt-4">Full Stack<br>Developer Intern</h3>
+        <p class="mt-6 font-medium leading-relaxed">
+          Currently gaining hands-on experience as a Full Stack Developer Intern with a Japan-based organization.
+        </p>
+      </article>
+
+      <article class="reveal card bg-pink text-black p-8 md:p-10 hover-lift shine">
+        <div class="flex justify-between items-start gap-4">
+          <span class="bg-black text-pink px-3 py-2 font-mono text-xs uppercase">1 Month</span>
+          <span class="font-black text-3xl">02</span>
+        </div>
+        <p class="font-mono text-xs uppercase mt-12">Accenture • Internship</p>
+        <h3 class="text-4xl md:text-5xl font-black uppercase leading-[.85] mt-4">Python<br>Developer Intern</h3>
+        <p class="mt-6 font-medium leading-relaxed">
+          Completed a one-month internship focused on Python development and practical software development experience.
+        </p>
+      </article>
+    </div>
+
+    <div class="mt-10 reveal border-y-2 border-gray-800 py-7 flex flex-wrap gap-x-10 gap-y-4 font-mono text-xs uppercase text-gray-500">
+      <span>Internship Experience</span>
+      <span>Full Stack Development</span>
+      <span>Python Development</span>
+      <span>International Exposure</span>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="bg-acid py-28 px-5 md:px-10 grid-bg">
+  <div class="max-w-7xl mx-auto">
+    <div class="reveal flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[.3em]">06 — Selected Builds</p>
+        <h2 class="text-6xl md:text-9xl font-black uppercase leading-[.75] tracking-tightest">
+          WHAT<br><span class="text-pink">I BUILD</span>
+        </h2>
+      </div>
+      <p class="font-black uppercase max-w-xs md:text-right">A growing collection of projects, experiments and ideas.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-7">
+      <article class="reveal md:col-span-2 card bg-black text-white overflow-hidden hover-lift shine">
+        <div class="grid lg:grid-cols-2">
+          <div class="min-h-[380px] relative bg-[#1b1b1b] overflow-hidden">
+            <div class="absolute inset-0 grid-fine opacity-30"></div>
+            <div class="absolute -right-8 -bottom-16 text-[13rem] font-black text-pink opacity-20">HEX</div>
+            <div class="relative h-full p-8 md:p-12 flex flex-col justify-between">
+              <span class="bg-acid text-black px-4 py-2 font-black uppercase w-fit">Featured / AI + Security</span>
+              <div>
+                <p class="font-mono text-xs text-gray-500 uppercase mb-3">Project 01</p>
+                <h3 class="text-6xl md:text-8xl font-black uppercase leading-[.75] tracking-tightest">HEXA<br><span class="text-acid">SCAN</span></h3>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white text-black p-8 md:p-12 flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[.25em]">AI-powered threat scanning</p>
+              <h4 class="text-3xl md:text-4xl font-black uppercase leading-none mt-5">A security-focused platform concept</h4>
+              <p class="mt-6 text-lg font-medium leading-relaxed">Hexa Scan explores an intelligent workflow for identifying and analyzing potentially harmful digital threats through a developer-friendly interface.</p>
+              <div class="flex flex-wrap gap-2 mt-7">
+                <span class="bg-black text-white px-3 py-2 text-xs font-mono uppercase">AI</span>
+                <span class="bg-pink px-3 py-2 text-xs font-mono uppercase">Security</span>
+                <span class="bg-acid px-3 py-2 text-xs font-mono uppercase">Web</span>
+              </div>
+            </div>
+            <div class="mt-10 border-t-2 border-black pt-5 font-black uppercase flex justify-between"><span>Featured Build</span><span class="text-3xl">↗</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="reveal card bg-pink text-black p-7 hover-lift">
+        <div class="flex justify-between"><span class="font-mono text-xs">02</span><span class="font-black uppercase">Exploration</span></div>
+        <h3 class="text-4xl font-black uppercase mt-16 leading-none">Web<br>Experiments</h3>
+        <p class="mt-5 font-medium">Interactive frontend experiments focused on layouts, motion and modern UI.</p>
+      </article>
+
+      <article class="reveal card bg-white text-black p-7 hover-lift">
+        <div class="flex justify-between"><span class="font-mono text-xs">03</span><span class="font-black uppercase">Learning</span></div>
+        <h3 class="text-4xl font-black uppercase mt-16 leading-none">IoT<br>Builds</h3>
+        <p class="mt-5 font-medium">Hands-on exploration of connected systems, sensors and software-driven hardware ideas.</p>
+      </article>
+
+      <article class="reveal card bg-black text-white p-7 hover-lift">
+        <div class="flex justify-between"><span class="font-mono text-xs text-acid">04</span><span class="font-black uppercase text-pink">Lab</span></div>
+        <h3 class="text-4xl font-black uppercase mt-16 leading-none">AI<br>Experiments</h3>
+        <p class="mt-5 font-medium text-gray-400">Small experiments around intelligent features, automation and developer workflows.</p>
+      </article>
+
+      <article class="reveal card bg-acid text-black p-7 hover-lift">
+        <div class="flex justify-between"><span class="font-mono text-xs">05</span><span class="font-black uppercase">Building</span></div>
+        <h3 class="text-4xl font-black uppercase mt-16 leading-none">Next<br>Build</h3>
+        <p class="mt-5 font-medium">The next idea is still taking shape — this space stays open for what's worth building next.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="bg-pink text-white py-20 px-5 md:px-10">
+  <div class="max-w-7xl mx-auto reveal">
+    <p class="text-xs font-black uppercase tracking-[.3em] text-black">04 — Education</p>
+    <div class="mt-8 border-y-4 border-black py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <p class="font-mono text-sm text-black uppercase">Currently studying</p>
+        <h2 class="text-4xl md:text-6xl font-black uppercase leading-none">B.Tech — CSE (IoT)</h2>
+      </div>
+      <div class="text-left md:text-right">
+        <p class="font-black uppercase text-black">Government Engineering College</p>
+        <p class="font-mono text-sm">GEC Siwan • Lateral Entry</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="bg-acid py-24 px-5 md:px-10 grid-bg">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-end">
+    <div class="reveal">
+      <p class="text-xs font-black uppercase tracking-[.3em]">07 — Contact</p>
+      <h2 class="text-6xl md:text-8xl font-black uppercase leading-[.78] tracking-tightest mt-5 text-pink">LET'S<br><span class="text-black">CONNECT</span></h2>
+      <p class="mt-8 max-w-md text-lg font-bold">For opportunities, collaboration, ideas, or just a conversation about technology.</p>
+    </div>
+    <div class="reveal space-y-4">
+      <a href="mailto:hello@nirmalkumar.dev" class="card bg-white p-6 flex justify-between items-center hover-lift">
+        <span><small class="block text-xs font-black uppercase">Email</small><strong class="text-xl">nirmalsinghcse52@gmail.com</strong></span><span class="text-3xl font-black">↗</span>
+      </a>
+      <a href="#" class="card bg-black text-white p-6 flex justify-between items-center hover-lift">
+        <span><small class="block text-xs font-black uppercase text-acid">GitHub</small><strong class="text-xl">github.com/nirmal</strong></span><span class="text-3xl font-black text-pink">↗</span>
+      </a>
+      <a href="#" class="card bg-pink p-6 flex justify-between items-center hover-lift">
+        <span><small class="block text-xs font-black uppercase">LinkedIn</small><strong class="text-xl">Nirmal Kumar</strong></span><span class="text-3xl font-black">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="bg-black text-white px-5 md:px-10 pt-16 pb-8 grid-fine">
+  <div class="max-w-7xl mx-auto w-full">
+    <div class="flex flex-col md:flex-row justify-between gap-8">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[.3em] text-gray-500">Personal Portfolio</p>
+        <p class="text-3xl font-black uppercase mt-3">Nirmal Kumar<span class="text-pink">.</span></p>
+      </div>
+      <p class="max-w-sm text-gray-500">Code, curiosity, experiments and continuous learning.</p>
+    </div>
+    <div class="border-t border-gray-800 mt-12 pt-8 flex justify-between text-xs font-mono text-gray-500 uppercase">
+      <span>© 2026 Nirmal Kumar</span><span>Built with intent.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+const menuBtn=document.getElementById('menuBtn');
+const menu=document.getElementById('mobileMenu');
+function scrollNav(){ if(scrollY>40) nav.classList.add('nav-scrolled'); else nav.classList.remove('nav-scrolled'); }
+addEventListener('scroll',scrollNav); scrollNav();
+menuBtn.addEventListener('click',()=>{menu.classList.toggle('translate-x-full');menuBtn.textContent=menu.classList.contains('translate-x-full')?'Menu':'Close';});
+document.querySelectorAll('.mobileLink').forEach(a=>a.addEventListener('click',()=>{menu.classList.add('translate-x-full');menuBtn.textContent='Menu';}));
+const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');observer.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
+</script>
+</body>
+</html>
