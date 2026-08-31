@@ -1,3 +1,241 @@
+Today 11:58 AM
+Bhai bekar lag rha hai
+Zoom out krne par aisa ho rha hai mobile me jo bekar lag rha hai isse thik kro
+
+Haan bhai, ab mujhe actual root cause samajh aa gaya. Pehle jo fix diya tha woh bhi @media (max-width) par dependent tha, aur zoom-out karte hi phone ka CSS viewport desktop jaisa behave kar raha tha. Isliye problem repeat ho rahi thi.
+
+Ab maine different approach lagayi hai:
+
+📱 Actual device detect hoga, zoom level nahi
+🔍 Zoom-out karne par bhi mobile layout mobile hi rahega
+📐 Saare major grids forcefully single-column mobile mode mein
+🟩 Right-side empty green area nahi
+🖼️ Image container full-width correctly scale hoga
+🃏 Cards screen ke width ke according honge
+🔤 Typography mobile ke liye locked/responsive
+💻 Laptop/desktop par desktop layout normal rahega
+🔄 GitHub/Vercel ke liye same single index.html
+🔥 Ye wala upload karo
+
+Download FINAL mobile + desktop fixed version
+
+GitHub mein existing index.html ko is file se replace karo → commit → Vercel redeploy.
+
+Is baar specifically zoom-out issue ko target kiya hai, sirf normal max-width media query nahi.
+
+nirmal_portfolio_final_mobile_fixed.html
+HTML
+Ye side me A jaisa kuch kuin likha hai page scroll bhi kr rha hu waisa hi hai
+Analyzed
+from pathlib import Path
+
+src = Path("/mnt/data/nirmal_portfolio_final_mobile_fixed.html")
+out = Path("/mnt/data/nirmal_portfolio_clean_mobile.html")
+html = src.read_text(encoding="utf-8")
+
+fix = r'''
+/* FINAL OVERFLOW FIX
+   The oversized decorative BUILD/HEX lettering must never create visual spill
+   or a horizontal scroll on phones. */
+html, body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+}
+@media (max-width:1100px){
+  section, footer, nav{
+    max-width:100vw;
+    overflow-x:hidden;
+  }
+  #home .absolute.-bottom-10{
+    display:none !important;
+  }
+  #work .absolute{
+    max-width:100%;
+  }
+}
+@media (max-width:600px){
+  *, *::before, *::after{
+    max-width:100%;
+  }
+  #home, #about, #education, #stack, #achievements, #work, #contact, footer{
+    width:100% !important;
+    max-width:100vw !important;
+    overflow-x:hidden !important;
+    box-sizing:border-box;
+  }
+  #home > div, #about > div, #contact > div{
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box;
+  }
+}
+'''
+html = html.replace("</style>", fix + "\n</style>", 1)
+
+out.write_text(html, encoding="utf-8")
+print(out)
+
+STDOUT/STDERR
+/mnt/data/nirmal_portfolio_clean_mobile.html
+
+
+Haan bhai, ab screenshot se exact culprit mil gaya. 😄
+
+Side mein jo bada “A” dikh raha hai, woh actual content nahi hai — portfolio ka decorative oversized BUILD text screen ke bahar spill kar raha hai. Isi tarah ka overflow horizontal scrolling/extra blank area bhi create kar sakta hai.
+
+Maine ab:
+
+❌ Mobile par decorative giant BUILD hide kar diya
+🚫 html, body, sections sab par horizontal overflow prevent kiya
+📱 Mobile width ko 100vw ke andar lock kiya
+🖥️ Desktop decoration ko untouched rakha
+🔍 Zoom/scroll par side mein content spill hone se roka
+🖼️ Relative image path bhi maintain kiya
+Ye wala use karo
+
+Download clean mobile + desktop version
+
+Isko GitHub mein index.html se replace karke Vercel redeploy kar do.
+
+Aur jo screenshot mein pink section ke right side giant green “A” tha — woh ab mobile par nahi aayega. 
+
+nirmal_portfolio_clean_mobile.html
+HTML
+Ye sab likha to ab kat ja rha hai iska kya solution hai
+Analyzed
+from pathlib import Path
+
+src = Path("/mnt/data/nirmal_portfolio_clean_mobile.html")
+out = Path("/mnt/data/nirmal_portfolio_final_mobile_v2.html")
+html = src.read_text(encoding="utf-8")
+
+css = r'''
+/* MOBILE V2 — prevent card/content overflow, especially the featured project */
+@media (max-width: 767px){
+  html,body{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  section, nav, footer, main, header, article, div{
+    box-sizing:border-box;
+    min-width:0;
+  }
+
+  section > div{
+    min-width:0;
+    max-width:100% !important;
+  }
+
+  /* Featured project: force every nested layout to one column */
+  #work .grid,
+  #work .lg\:grid-cols-2{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #work article,
+  #work article > div,
+  #work article > div > div{
+    min-width:0 !important;
+    max-width:100% !important;
+    width:100% !important;
+  }
+
+  #work .min-h-\[380px\]{
+    min-height:280px !important;
+    width:100% !important;
+  }
+
+  #work h3{
+    font-size:clamp(3.5rem,18vw,7rem) !important;
+    line-height:.78 !important;
+    overflow-wrap:break-word;
+    word-break:normal;
+  }
+
+  #work h4{
+    font-size:clamp(1.55rem,7vw,2.6rem) !important;
+    line-height:.95 !important;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  #work p{
+    max-width:100% !important;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  #work .text-lg{
+    font-size:1rem !important;
+    line-height:1.55 !important;
+  }
+
+  /* Hide only oversized decorative artwork that cannot fit a phone */
+  #work .absolute.-right-8{
+    display:none !important;
+  }
+
+  /* All other cards */
+  .card{
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow:hidden !important;
+  }
+
+  h1,h2,h3,h4,h5,h6{
+    max-width:100%;
+    overflow-wrap:break-word;
+  }
+
+  /* Prevent long labels/links from forcing the page wider */
+  a,span,strong,p{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
+'''
+html = html.replace("</style>", css + "\n</style>", 1)
+
+out.write_text(html, encoding="utf-8")
+print(out)
+
+STDOUT/STDERR
+/mnt/data/nirmal_portfolio_final_mobile_v2.html
+
+
+Haan bhai, ab screenshot mein exact problem dikh rahi hai. 😅
+
+Is baar issue giant A nahi hai — Hexa Scan ka featured project card khud viewport se wider ho raha hai. Isliye:
+
+SECURITY-FOCUSED P... cut ho raha hai
+paragraph right side se cut ho raha hai
+poora white card screen se bahar ja raha hai
+horizontal overflow aa raha hai
+
+Maine ab featured project ko specifically mobile ke liye rebuild-style CSS diya hai:
+
+✅ Nested 2-column project ko mobile par 1 column
+✅ min-width: 0 — flex/grid overflow fix
+✅ Long headings automatically wrap
+✅ Paragraphs screen ke andar wrap
+✅ Project card max 100%
+✅ Oversized decorative artwork hidden on mobile
+✅ Horizontal scrolling completely disabled
+✅ Desktop layout untouched
+🔥 Ye wala use karo
+
+Download Final Mobile V2
+
+GitHub mein isko index.html se replace → commit → Vercel redeploy.
+
+Is baar specifically screenshot wale Hexa Scan overflow ko fix kiya hai, sirf overall page overflow ko nahi. 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,6 +293,288 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
 .glitch:hover{animation:glitch .25s steps(2,end) 2}
 @keyframes glitch{0%{transform:translate(0)}50%{transform:translate(3px,-2px)}100%{transform:translate(-2px,2px)}}
 .shine{position:relative;overflow:hidden}.shine:after{content:"";position:absolute;inset:-100% -30%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-70%);transition:transform .7s}.shine:hover:after{transform:translateX(70%)}
+
+/* RESPONSIVE / ZOOM-SAFE LAYOUT
+   Keep this block for future responsive edits.
+   It intentionally starts at 1100px so browser zoom-out on phones does not
+   switch the page back into a cramped desktop/tablet grid. */
+@media (max-width:1100px){
+  body{overflow-x:hidden}
+  .grid-bg{background-size:32px 32px}
+  .grid-fine{background-size:26px 26px}
+
+  #nav{padding:14px 20px}
+  #nav .hidden.md\:flex{display:none!important}
+  #menuBtn{
+    display:block!important;
+    background:#ccff00;color:#111;border:2px solid #111;
+    padding:9px 13px;font-size:11px;box-shadow:4px 4px 0 #ff33cc;
+  }
+
+  #home{
+    min-height:auto;
+    padding:96px 20px 64px;
+  }
+  #home > div{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:36px!important;
+  }
+  #home .lg\:col-span-7,#home .lg\:col-span-5{grid-column:auto!important}
+  #home h1{
+    font-size:clamp(64px,15vw,150px);
+    line-height:.78;
+    letter-spacing:-.075em;
+  }
+  #home .card{max-width:560px;width:100%;margin:0 auto}
+  #home .absolute.-bottom-10{font-size:24vw;right:0}
+
+  #about,#education,#achievements,#work,#contact{padding:76px 20px}
+  #stack{padding:82px 20px}
+
+  #about > div,
+  #contact > div{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:38px!important;
+  }
+
+  #about h2,#education h2,#achievements h2,#work h2,#contact h2{
+    font-size:clamp(58px,13vw,125px);
+    line-height:.78;
+    letter-spacing:-.075em;
+  }
+
+  #stack > div > .reveal:first-child{display:flex!important;flex-direction:column!important}
+  #stack .grid.md\:grid-cols-2{grid-template-columns:1fr!important}
+
+  #education .grid.md\:grid-cols-3{grid-template-columns:1fr!important}
+  #education .card{min-height:260px}
+
+  #achievements .grid.md\:grid-cols-2{grid-template-columns:1fr!important}
+
+  #work .grid.md\:grid-cols-2{grid-template-columns:1fr!important}
+  #work .md\:col-span-2{grid-column:auto!important}
+  #work .grid.lg\:grid-cols-2{grid-template-columns:1fr!important}
+  #work .min-h-\[380px\]{min-height:330px}
+
+  footer .flex.md\:flex-row{flex-direction:column!important}
+  footer .flex.justify-between{gap:20px}
+}
+
+@media (max-width:600px){
+  .grid-bg{background-size:28px 28px}
+  .grid-fine{background-size:24px 24px}
+
+  #nav{padding:13px 16px}
+  #home{padding:90px 16px 54px}
+  #home h1{font-size:19vw}
+  #home .card{max-width:100%}
+
+  #about,#education,#achievements,#work,#contact{padding:68px 16px}
+  #stack{padding:74px 16px}
+
+  #about h2,#education h2,#achievements h2,#work h2,#contact h2{
+    font-size:18vw;
+  }
+
+  #about .text-2xl{font-size:1.35rem;line-height:1.05}
+  #about .text-base{font-size:1rem}
+
+  #stack .card,#education .card,#achievements .card{padding:22px}
+  #stack .text-3xl{font-size:1.55rem}
+  #education h3,#achievements h3{font-size:2.1rem}
+
+  #work .p-8{padding:22px}
+  #work .min-h-\[380px\]{min-height:300px}
+  #work h3{font-size:18vw}
+  #work h4{font-size:1.65rem}
+  #work .text-lg{font-size:1rem}
+
+  #contact a{padding:18px}
+  #contact strong{font-size:15px;overflow-wrap:anywhere}
+
+  footer{padding:48px 16px 24px}
+  footer .text-3xl{font-size:1.6rem}
+  footer .border-t{margin-top:32px;padding-top:20px}
+}
+
+@media (max-width:380px){
+  #home h1{font-size:18.5vw}
+  #about h2,#education h2,#achievements h2,#work h2,#contact h2{font-size:17.5vw}
+  #menuBtn{font-size:10px;padding:7px 9px}
+}
+
+/* HARD MOBILE MODE — uses the actual device, not the zoomed CSS viewport. */
+html.mobile-device body{width:100%;min-width:0;max-width:100%;overflow-x:hidden}
+html.mobile-device #nav{width:100%;box-sizing:border-box}
+html.mobile-device #home,
+html.mobile-device #about,
+html.mobile-device #education,
+html.mobile-device #stack,
+html.mobile-device #achievements,
+html.mobile-device #work,
+html.mobile-device #contact,
+html.mobile-device footer{width:100%;box-sizing:border-box}
+html.mobile-device #home > div,
+html.mobile-device #about > div,
+html.mobile-device #contact > div{width:100%;max-width:none;grid-template-columns:1fr!important}
+html.mobile-device #home > div{display:grid!important}
+html.mobile-device #home .lg\:col-span-7,
+html.mobile-device #home .lg\:col-span-5{grid-column:auto!important}
+html.mobile-device #stack .grid.md\:grid-cols-2,
+html.mobile-device #education .grid.md\:grid-cols-3,
+html.mobile-device #achievements .grid.md\:grid-cols-2,
+html.mobile-device #work .grid.md\:grid-cols-2,
+html.mobile-device #work .grid.lg\:grid-cols-2{grid-template-columns:1fr!important}
+html.mobile-device #work .md\:col-span-2{grid-column:auto!important}
+html.mobile-device #home h1{font-size:clamp(58px,19vw,96px);line-height:.78;letter-spacing:-.075em}
+html.mobile-device #about h2,
+html.mobile-device #education h2,
+html.mobile-device #achievements h2,
+html.mobile-device #work h2,
+html.mobile-device #contact h2{font-size:clamp(52px,18vw,90px);line-height:.78;letter-spacing:-.075em}
+html.mobile-device #home .card{width:100%;max-width:none;margin:0;box-sizing:border-box}
+html.mobile-device #home .aspect-\[4\/5\]{aspect-ratio:4/5}
+html.mobile-device #work .min-h-\[380px\]{min-height:300px}
+html.mobile-device footer .flex.md\:flex-row{flex-direction:column!important}
+html.mobile-device footer .flex.justify-between{gap:20px}
+html.mobile-device #menuBtn{display:block!important}
+html.mobile-device .hidden.md\:flex{display:none!important}
+
+@media (max-width:767px){
+  html{overflow-x:hidden}
+  body{width:100%;min-width:0}
+  .max-w-7xl{max-width:none!important;width:100%!important}
+}
+
+/* FINAL OVERFLOW FIX
+   The oversized decorative BUILD/HEX lettering must never create visual spill
+   or a horizontal scroll on phones. */
+html, body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+}
+@media (max-width:1100px){
+  section, footer, nav{
+    max-width:100vw;
+    overflow-x:hidden;
+  }
+  #home .absolute.-bottom-10{
+    display:none !important;
+  }
+  #work .absolute{
+    max-width:100%;
+  }
+}
+@media (max-width:600px){
+  *, *::before, *::after{
+    max-width:100%;
+  }
+  #home, #about, #education, #stack, #achievements, #work, #contact, footer{
+    width:100% !important;
+    max-width:100vw !important;
+    overflow-x:hidden !important;
+    box-sizing:border-box;
+  }
+  #home > div, #about > div, #contact > div{
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box;
+  }
+}
+
+
+/* MOBILE V2 — prevent card/content overflow, especially the featured project */
+@media (max-width: 767px){
+  html,body{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  section, nav, footer, main, header, article, div{
+    box-sizing:border-box;
+    min-width:0;
+  }
+
+  section > div{
+    min-width:0;
+    max-width:100% !important;
+  }
+
+  /* Featured project: force every nested layout to one column */
+  #work .grid,
+  #work .lg\:grid-cols-2{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #work article,
+  #work article > div,
+  #work article > div > div{
+    min-width:0 !important;
+    max-width:100% !important;
+    width:100% !important;
+  }
+
+  #work .min-h-\[380px\]{
+    min-height:280px !important;
+    width:100% !important;
+  }
+
+  #work h3{
+    font-size:clamp(3.5rem,18vw,7rem) !important;
+    line-height:.78 !important;
+    overflow-wrap:break-word;
+    word-break:normal;
+  }
+
+  #work h4{
+    font-size:clamp(1.55rem,7vw,2.6rem) !important;
+    line-height:.95 !important;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  #work p{
+    max-width:100% !important;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  #work .text-lg{
+    font-size:1rem !important;
+    line-height:1.55 !important;
+  }
+
+  /* Hide only oversized decorative artwork that cannot fit a phone */
+  #work .absolute.-right-8{
+    display:none !important;
+  }
+
+  /* All other cards */
+  .card{
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow:hidden !important;
+  }
+
+  h1,h2,h3,h4,h5,h6{
+    max-width:100%;
+    overflow-wrap:break-word;
+  }
+
+  /* Prevent long labels/links from forcing the page wider */
+  a,span,strong,p{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -75,20 +595,22 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
 <div id="mobileMenu" class="fixed inset-0 z-40 bg-black text-acid translate-x-full transition-transform duration-300 flex items-center justify-center">
   <div class="grid-fine absolute inset-0 opacity-30"></div>
   <div class="relative flex flex-col gap-7 text-center">
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#about">About</a>
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#education">Education</a>
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#stack">Stack</a>
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#achievements">Achievements</a>
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#work">Work</a>
-    <a class="mobileLink text-acid text-5xl font-black uppercase" href="#contact">Contact</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#about">About</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#education">Education</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#stack">Stack</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#achievements">Achievements</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#work">Work</a>
+    <a class="mobileLink text-acid text-5xl md:text-6xl font-black uppercase" href="#contact">Contact</a>
   </div>
 </div>
 
 <main>
+<!-- HERO: Change your name/role/location/profile image here for future updates. -->
 <section id="home" class="min-h-screen pt-28 pb-16 px-5 md:px-10 grid-bg flex items-center relative overflow-hidden">
   <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-12 gap-10 items-center">
     <div class="lg:col-span-7 reveal">
-      <p class="font-black uppercase tracking-[.28em] text-sm mb-5">CSE • Developer • Student</p>
+      <!-- HERO ROLE: Keep CSE (IoT) here because this is the current degree/specialization. -->
+<p class="font-black uppercase tracking-[.28em] text-sm mb-5">CSE (IoT) • Developer • Student</p>
       <h1 class="text-[17vw] lg:text-[9.5rem] leading-[.78] font-black uppercase tracking-tightest text-pink">
         NIRMAL<br>KUMAR
       </h1>
@@ -100,7 +622,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
     <div class="lg:col-span-5 reveal">
       <div class="card bg-white p-3 rotate-2 hover:rotate-0 transition-transform duration-300">
         <div class="aspect-[4/5] bg-black overflow-hidden">
-          <img src="./img/nkimage.jpg" alt="Nirmal Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
+          <img src="./img/gk.jpeg" alt="Nirmal Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
         </div>
         <div class="flex justify-between items-center px-2 pt-4 pb-1">
           <span class="font-black uppercase">Nirmal Kumar</span>
@@ -121,6 +643,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
   </div>
 </div>
 
+<!-- ABOUT: Update your personal introduction here. Keep it short and genuine. -->
 <section id="about" class="bg-pink text-white py-24 px-5 md:px-10">
   <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-start">
     <div class="reveal">
@@ -131,7 +654,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
     </div>
     <div class="reveal">
       <p class="text-2xl md:text-3xl font-black leading-tight">
-        I'm Nirmal Kumar, a Computer Science & Engineering student, with a strong interest in software development and modern technology.
+        I'm Nirmal Kumar, a CSE student specializing in IoT, with a strong interest in software development and modern technology.
       </p>
       <p class="mt-7 text-base md:text-lg font-medium leading-relaxed max-w-xl">
         I like understanding how things work, turning ideas into working interfaces and applications, and continuously improving my skills through hands-on building.
@@ -150,6 +673,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
   </div>
 </section>
 
+<!-- TECH STACK: Add/remove technologies as your skills grow. Avoid listing tools you cannot explain in an interview. -->
 <section id="stack" class="bg-black text-white py-28 px-5 md:px-10 grid-fine">
   <div class="max-w-7xl mx-auto">
     <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
@@ -160,7 +684,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
         </h2>
       </div>
       <p class="max-w-md text-gray-400 text-lg leading-relaxed">
-        Technologies I use, learn and experiment with while building software.
+        Technologies I use, learn and experiment with while building software and exploring IoT.
       </p>
     </div>
 
@@ -222,6 +746,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
 </section>
 
 
+<!-- EDUCATION: Update institution, course, CGPA and status here. Diploma CGPA belongs inside the diploma card. -->
 <section id="education" class="bg-white text-black py-24 px-5 md:px-10">
   <div class="max-w-7xl mx-auto">
     <div class="reveal mb-14">
@@ -260,6 +785,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
 </section>
 
 
+<!-- ACHIEVEMENTS: Add internships, certifications, awards and other verified milestones here. -->
 <section id="achievements" class="bg-black text-white py-28 px-5 md:px-10 grid-fine">
   <div class="max-w-7xl mx-auto">
     <div class="reveal mb-16">
@@ -304,6 +830,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
   </div>
 </section>
 
+<!-- PROJECTS: Replace project cards with real projects over time. Keep only work you can demonstrate. -->
 <section id="work" class="bg-acid py-28 px-5 md:px-10 grid-bg">
   <div class="max-w-7xl mx-auto">
     <div class="reveal flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
@@ -373,22 +900,9 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
   </div>
 </section>
 
-<section class="bg-pink text-white py-20 px-5 md:px-10">
-  <div class="max-w-7xl mx-auto reveal">
-    <p class="text-xs font-black uppercase tracking-[.3em] text-black">04 — Education</p>
-    <div class="mt-8 border-y-4 border-black py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div>
-        <p class="font-mono text-sm text-black uppercase">Currently studying</p>
-        <h2 class="text-4xl md:text-6xl font-black uppercase leading-none">B.Tech — CSE (IoT)</h2>
-      </div>
-      <div class="text-left md:text-right">
-        <p class="font-black uppercase text-black">Government Engineering College</p>
-        <p class="font-mono text-sm">GEC Siwan • Lateral Entry</p>
-      </div>
-    </div>
-  </div>
-</section>
 
+
+<!-- CONTACT: Replace placeholder email/social links with your real public profiles before publishing. -->
 <section id="contact" class="bg-acid py-24 px-5 md:px-10 grid-bg">
   <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-end">
     <div class="reveal">
@@ -398,7 +912,7 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
     </div>
     <div class="reveal space-y-4">
       <a href="mailto:hello@nirmalkumar.dev" class="card bg-white p-6 flex justify-between items-center hover-lift">
-        <span><small class="block text-xs font-black uppercase">Email</small><strong class="text-xl">nirmalsinghcse52@gmail.com</strong></span><span class="text-3xl font-black">↗</span>
+        <span><small class="block text-xs font-black uppercase">Email</small><strong class="text-xl">hello@nirmalkumar.dev</strong></span><span class="text-3xl font-black">↗</span>
       </a>
       <a href="#" class="card bg-black text-white p-6 flex justify-between items-center hover-lift">
         <span><small class="block text-xs font-black uppercase text-acid">GitHub</small><strong class="text-xl">github.com/nirmal</strong></span><span class="text-3xl font-black text-pink">↗</span>
@@ -426,6 +940,16 @@ body{margin:0;background:#ccff00;color:#111;font-family:Inter,system-ui,sans-ser
   </div>
 </footer>
 
+
+<script>
+// Keep mobile layout locked to real phones even when the browser is zoomed out.
+(function(){
+  const ua = navigator.userAgent || '';
+  const isPhone = /Android|iPhone|iPod|Mobile/i.test(ua) ||
+    (navigator.maxTouchPoints > 1 && Math.min(screen.width, screen.height) <= 900);
+  if (isPhone) document.documentElement.classList.add('mobile-device');
+})();
+</script>
 <script>
 const nav=document.getElementById('nav');
 const menuBtn=document.getElementById('menuBtn');
@@ -437,5 +961,20 @@ document.querySelectorAll('.mobileLink').forEach(a=>a.addEventListener('click',(
 const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');observer.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
 </script>
+
+<!--
+  FUTURE EDIT GUIDE
+  1. Hero: name, role, location and profile image.
+  2. About: your current short introduction.
+  3. Tech Stack: add technologies only as you genuinely learn them.
+  4. Education: keep B.Tech as CSE (IoT); update diploma/10th details if needed.
+  5. Achievements: add internships/certifications/awards with accurate dates and titles.
+  6. Projects: replace the generic build cards with real project names, links and screenshots.
+  7. Contact: replace placeholder email, GitHub and LinkedIn URLs.
+  8. Footer: update the year if this portfolio is reused in a future year.
+-->
+
 </body>
 </html>
+nirmal_portfolio_final_mobile_v2.html
+HTML
