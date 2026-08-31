@@ -1,247 +1,9 @@
-Today 11:58 AM
-Bhai bekar lag rha hai
-Zoom out krne par aisa ho rha hai mobile me jo bekar lag rha hai isse thik kro
-
-Haan bhai, ab mujhe actual root cause samajh aa gaya. Pehle jo fix diya tha woh bhi @media (max-width) par dependent tha, aur zoom-out karte hi phone ka CSS viewport desktop jaisa behave kar raha tha. Isliye problem repeat ho rahi thi.
-
-Ab maine different approach lagayi hai:
-
-📱 Actual device detect hoga, zoom level nahi
-🔍 Zoom-out karne par bhi mobile layout mobile hi rahega
-📐 Saare major grids forcefully single-column mobile mode mein
-🟩 Right-side empty green area nahi
-🖼️ Image container full-width correctly scale hoga
-🃏 Cards screen ke width ke according honge
-🔤 Typography mobile ke liye locked/responsive
-💻 Laptop/desktop par desktop layout normal rahega
-🔄 GitHub/Vercel ke liye same single index.html
-🔥 Ye wala upload karo
-
-Download FINAL mobile + desktop fixed version
-
-GitHub mein existing index.html ko is file se replace karo → commit → Vercel redeploy.
-
-Is baar specifically zoom-out issue ko target kiya hai, sirf normal max-width media query nahi.
-
-nirmal_portfolio_final_mobile_fixed.html
-HTML
-Ye side me A jaisa kuch kuin likha hai page scroll bhi kr rha hu waisa hi hai
-Analyzed
-from pathlib import Path
-
-src = Path("/mnt/data/nirmal_portfolio_final_mobile_fixed.html")
-out = Path("/mnt/data/nirmal_portfolio_clean_mobile.html")
-html = src.read_text(encoding="utf-8")
-
-fix = r'''
-/* FINAL OVERFLOW FIX
-   The oversized decorative BUILD/HEX lettering must never create visual spill
-   or a horizontal scroll on phones. */
-html, body{
-  width:100%;
-  max-width:100%;
-  overflow-x:hidden !important;
-}
-@media (max-width:1100px){
-  section, footer, nav{
-    max-width:100vw;
-    overflow-x:hidden;
-  }
-  #home .absolute.-bottom-10{
-    display:none !important;
-  }
-  #work .absolute{
-    max-width:100%;
-  }
-}
-@media (max-width:600px){
-  *, *::before, *::after{
-    max-width:100%;
-  }
-  #home, #about, #education, #stack, #achievements, #work, #contact, footer{
-    width:100% !important;
-    max-width:100vw !important;
-    overflow-x:hidden !important;
-    box-sizing:border-box;
-  }
-  #home > div, #about > div, #contact > div{
-    width:100% !important;
-    max-width:100% !important;
-    box-sizing:border-box;
-  }
-}
-'''
-html = html.replace("</style>", fix + "\n</style>", 1)
-
-out.write_text(html, encoding="utf-8")
-print(out)
-
-STDOUT/STDERR
-/mnt/data/nirmal_portfolio_clean_mobile.html
-
-
-Haan bhai, ab screenshot se exact culprit mil gaya. 😄
-
-Side mein jo bada “A” dikh raha hai, woh actual content nahi hai — portfolio ka decorative oversized BUILD text screen ke bahar spill kar raha hai. Isi tarah ka overflow horizontal scrolling/extra blank area bhi create kar sakta hai.
-
-Maine ab:
-
-❌ Mobile par decorative giant BUILD hide kar diya
-🚫 html, body, sections sab par horizontal overflow prevent kiya
-📱 Mobile width ko 100vw ke andar lock kiya
-🖥️ Desktop decoration ko untouched rakha
-🔍 Zoom/scroll par side mein content spill hone se roka
-🖼️ Relative image path bhi maintain kiya
-Ye wala use karo
-
-Download clean mobile + desktop version
-
-Isko GitHub mein index.html se replace karke Vercel redeploy kar do.
-
-Aur jo screenshot mein pink section ke right side giant green “A” tha — woh ab mobile par nahi aayega. 
-
-nirmal_portfolio_clean_mobile.html
-HTML
-Ye sab likha to ab kat ja rha hai iska kya solution hai
-Analyzed
-from pathlib import Path
-
-src = Path("/mnt/data/nirmal_portfolio_clean_mobile.html")
-out = Path("/mnt/data/nirmal_portfolio_final_mobile_v2.html")
-html = src.read_text(encoding="utf-8")
-
-css = r'''
-/* MOBILE V2 — prevent card/content overflow, especially the featured project */
-@media (max-width: 767px){
-  html,body{
-    width:100% !important;
-    max-width:100% !important;
-    overflow-x:hidden !important;
-  }
-
-  section, nav, footer, main, header, article, div{
-    box-sizing:border-box;
-    min-width:0;
-  }
-
-  section > div{
-    min-width:0;
-    max-width:100% !important;
-  }
-
-  /* Featured project: force every nested layout to one column */
-  #work .grid,
-  #work .lg\:grid-cols-2{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) !important;
-    width:100% !important;
-    max-width:100% !important;
-  }
-
-  #work article,
-  #work article > div,
-  #work article > div > div{
-    min-width:0 !important;
-    max-width:100% !important;
-    width:100% !important;
-  }
-
-  #work .min-h-\[380px\]{
-    min-height:280px !important;
-    width:100% !important;
-  }
-
-  #work h3{
-    font-size:clamp(3.5rem,18vw,7rem) !important;
-    line-height:.78 !important;
-    overflow-wrap:break-word;
-    word-break:normal;
-  }
-
-  #work h4{
-    font-size:clamp(1.55rem,7vw,2.6rem) !important;
-    line-height:.95 !important;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-  }
-
-  #work p{
-    max-width:100% !important;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-  }
-
-  #work .text-lg{
-    font-size:1rem !important;
-    line-height:1.55 !important;
-  }
-
-  /* Hide only oversized decorative artwork that cannot fit a phone */
-  #work .absolute.-right-8{
-    display:none !important;
-  }
-
-  /* All other cards */
-  .card{
-    min-width:0 !important;
-    max-width:100% !important;
-    overflow:hidden !important;
-  }
-
-  h1,h2,h3,h4,h5,h6{
-    max-width:100%;
-    overflow-wrap:break-word;
-  }
-
-  /* Prevent long labels/links from forcing the page wider */
-  a,span,strong,p{
-    max-width:100%;
-    overflow-wrap:anywhere;
-  }
-}
-'''
-html = html.replace("</style>", css + "\n</style>", 1)
-
-out.write_text(html, encoding="utf-8")
-print(out)
-
-STDOUT/STDERR
-/mnt/data/nirmal_portfolio_final_mobile_v2.html
-
-
-Haan bhai, ab screenshot mein exact problem dikh rahi hai. 😅
-
-Is baar issue giant A nahi hai — Hexa Scan ka featured project card khud viewport se wider ho raha hai. Isliye:
-
-SECURITY-FOCUSED P... cut ho raha hai
-paragraph right side se cut ho raha hai
-poora white card screen se bahar ja raha hai
-horizontal overflow aa raha hai
-
-Maine ab featured project ko specifically mobile ke liye rebuild-style CSS diya hai:
-
-✅ Nested 2-column project ko mobile par 1 column
-✅ min-width: 0 — flex/grid overflow fix
-✅ Long headings automatically wrap
-✅ Paragraphs screen ke andar wrap
-✅ Project card max 100%
-✅ Oversized decorative artwork hidden on mobile
-✅ Horizontal scrolling completely disabled
-✅ Desktop layout untouched
-🔥 Ye wala use karo
-
-Download Final Mobile V2
-
-GitHub mein isko index.html se replace → commit → Vercel redeploy.
-
-Is baar specifically screenshot wale Hexa Scan overflow ko fix kiya hai, sirf overall page overflow ko nahi. 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Nirmal Kumar — CSE (IoT) student and developer portfolio.">
+<meta name="description" content="Nirmal Kumar — CSE student and developer portfolio.">
 <title>Nirmal Kumar — Developer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -622,7 +384,7 @@ html, body{
     <div class="lg:col-span-5 reveal">
       <div class="card bg-white p-3 rotate-2 hover:rotate-0 transition-transform duration-300">
         <div class="aspect-[4/5] bg-black overflow-hidden">
-          <img src="./img/gk.jpeg" alt="Nirmal Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
+          <img src="./img/nkimage.jpg" alt="Nirmal Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
         </div>
         <div class="flex justify-between items-center px-2 pt-4 pb-1">
           <span class="font-black uppercase">Nirmal Kumar</span>
@@ -654,7 +416,7 @@ html, body{
     </div>
     <div class="reveal">
       <p class="text-2xl md:text-3xl font-black leading-tight">
-        I'm Nirmal Kumar, a CSE student specializing in IoT, with a strong interest in software development and modern technology.
+        I'm Nirmal Kumar, a CSE student, with a strong interest in software development and modern technology.
       </p>
       <p class="mt-7 text-base md:text-lg font-medium leading-relaxed max-w-xl">
         I like understanding how things work, turning ideas into working interfaces and applications, and continuously improving my skills through hands-on building.
@@ -976,5 +738,3 @@ document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
 
 </body>
 </html>
-nirmal_portfolio_final_mobile_v2.html
-HTML
